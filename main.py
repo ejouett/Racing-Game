@@ -32,6 +32,10 @@ class Chariot:
             self.x -= self.speed
         if keys[pygame.K_RIGHT] and self.x < WIDTH - 80:
             self.x += self.speed
+        if keys[pygame.K_UP] and self.y > 0:
+            self.y -= self.speed
+        if keys[pygame.K_DOWN] and self.y < HEIGHT - 50:
+            self.y += self.speed
         self.rect.topleft = (self.x, self.y)
     
     def draw(self, screen):
