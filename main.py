@@ -34,7 +34,7 @@ def main():
 
         elif current_screen == "race":
             race_result = race_screen.run()
-            if race_result in ["win", "lose"]:  # Return to home on finish
+            if race_result in ["win", "lose", "exit", "quit"]:  # Return to home on finish
                 current_screen = "home"
 
         pygame.display.update()

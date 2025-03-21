@@ -12,7 +12,8 @@ class HomeScreen:
         # Define buttons for map selection
         self.colosseum_button = pygame.Rect(350, 300, BUTTON_WIDTH, BUTTON_HEIGHT)
         self.other_map_button = pygame.Rect(350, 450, BUTTON_WIDTH, BUTTON_HEIGHT)
-
+        self.ancientGreece_button = pygame.Rect(350, 600, BUTTON_WIDTH, BUTTON_HEIGHT)
+        
     def draw_text(self, text, position):
         rendered_text = self.font.render(text, True, BLACK)
         self.screen.blit(rendered_text, position)
@@ -26,7 +27,10 @@ class HomeScreen:
             pygame.draw.rect(self.screen, BLUE, self.colosseum_button)
             self.draw_text("Colosseum Map", (380, 330))
             pygame.draw.rect(self.screen, BLUE, self.other_map_button)
-            self.draw_text("Other Map (Coming Soon)", (360, 480))
+            self.draw_text("greek colosseum", (360, 480))
+            pygame.draw.rect(self.screen, BLUE, self.ancientGreece_button)
+            self.draw_text("greektrack", (360, 630))
+            
 
             # Handle events
             for event in pygame.event.get():
@@ -36,7 +40,9 @@ class HomeScreen:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.colosseum_button.collidepoint(event.pos):
                         return "assets/colosseum_track.png"
-                    elif self.other_map_button.collidepoint(event.pos):
-                        return "assets/geektracks.png"  # Update with other maps
+                    if self.other_map_button.collidepoint(event.pos):
+                        return "assets/greektracks.png"  # Update with other maps
+                    if self.ancientGreece_button.collidepoint(event.pos):
+                        return "assets/ancient_greece.png" 
 
             pygame.display.update()
