@@ -1,5 +1,7 @@
 import pygame
-Width, height = 1000, 800
+
+WIDTH, HEIGHT = 1000, 800
+
 class Chariot:
     def __init__(self, x, y):
         self.x, self.y = x, y
@@ -13,34 +15,33 @@ class Chariot:
         self.laps = 0
 
     def move(self, keys):
-        dx, dy = 0, 0
         if keys[pygame.K_LEFT] and self.x > 0:
             self.x -= self.speed
-        if keys[pygame.K_RIGHT] and self.x < Width - 60:
+        if keys[pygame.K_RIGHT] and self.x < WIDTH - 60:
             self.x += self.speed
         if keys[pygame.K_UP] and self.y > 0:
             self.y -= self.speed
-        if keys[pygame.K_DOWN] and self.y < height - 40:
+        if keys[pygame.K_DOWN] and self.y < HEIGHT - 40:
             self.y += self.speed
-        if dx or dy:
-            self.x += dx
-            self.y += dy
-            self.rect.topleft = (self.x, self.y)
+        self.rect.topleft = (self.x, self.y)
 
     def check_collision(self, track_bounds):
-        if not self.shield_active:
-            for boundary in track_bounds:
-                if self.rect.colliderect(boundary):
-                    self.health -= 10
-                    #self.bounce()
-                    #self.shield_active
+        for boundary in track_bounds:
+            if self.rect.colliderect(boundary):
+                self.health -= .5
+                print(f"Collision! Health: {self.health}")
         if self.shield_active and pygame.time.get_ticks() - self.shield_timer > 6000:
             self.shield_active = False
-
+        
+       # if self.rect.colliderect(finish_zone):
+        #    self.laps += 1
+        #    print(f"Collision! lap: {self.laps}")
+      
     #def bounce(self):
     #    self.x -= self.speed * 2
     #    self.y -= self.speed * 2
     #    self.rect.topleft = (self.x, self.y)
+  
 
     def activate_shield(self):
         self.shield_active = True
