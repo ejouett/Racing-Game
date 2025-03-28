@@ -4,11 +4,25 @@ import math
 
 WIDTH, HEIGHT = 1000, 800
 
+SHIELD_IMAGE = pygame.image.load("assets/shieldpoweruppixel.png")
+SHIELD_IMAGE = pygame.transform.scale(SHIELD_IMAGE, (40, 40))
+
+SPEED_BOOST_IMAGE = pygame.image.load("assets/poweruppixel.png")
+SPEED_BOOST_IMAGE = pygame.transform.scale(SPEED_BOOST_IMAGE, (40, 40))
+
+# Load AI chariot images
+AI_CHARIOT_IMAGES = [
+    pygame.transform.scale(pygame.image.load("assets/chariot 2 pixel art.png"), (60, 40)),
+    pygame.transform.scale(pygame.image.load("assets/chariot 2 pixel art.png"), (60, 40)),
+    pygame.transform.scale(pygame.image.load("assets/chariot 3 pixel art.png"), (60, 40)),
+    pygame.transform.scale(pygame.image.load("assets/chariot 3 pixel art.png"), (60, 40))
+]
+
 class Chariot:
     def __init__(self, x, y):
         self.x, self.y = x, y
         self.speed = 5
-        self.image = pygame.image.load("assets/chariot.png")
+        self.image = pygame.image.load("assets/chariot pixel art.png")
         self.image = pygame.transform.scale(self.image, (60, 40))
         self.rect = self.image.get_rect(topleft=(x, y))
         self.health = 100
@@ -85,8 +99,9 @@ class Chariot:
 
 
 class AIOpponent(Chariot):
-    def __init__(self, x, y, ai_path):
+    def __init__(self, x, y, ai_path, ai_index):
         super().__init__(x, y)
+        self.image = AI_CHARIOT_IMAGES[ai_index]  # Assign AI-specific image
         #self.path = ai_path
         #self.path = [(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
         #self.path = [(100, 200), (300, 250), (500, 300), (700, 350), (900, 400), (1100, 450), (1300, 500), (1500, 550)]
@@ -131,54 +146,32 @@ class AIOpponent(Chariot):
                 return  # AI doesn't move into boundaries
 
         self.rect.topleft = (self.x, self.y)  # Update AI position
-    '''
-    def move(self, track_bounds):
-        if self.path_index >= len(self.path):
-            self.path_index = 0  # Loop AI movement
+   
+class PowerUp:
+    def __init__(self, x, y, image):
+        self.x, self.y = x, y
+        self.image = image
+        self.rect = self.image.get_rect(topleft=(x, y))
 
-        target_x, target_y = self.path[self.path_index]
-        dx = target_x - self.x
-        dy = target_y - self.y
-
-        # Normalize movement
-        if abs(dx) > abs(dy):
-            dx = self.speed if dx > 0 else -self.speed
-            dy = 0
-        else:
-            dy = self.speed if dy > 0 else -self.speed
-            dx = 0
-
-        new_rect = self.rect.move(dx, dy)
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 
-       # if any(boundary.colliderect(new_rect) for boundary in track_bounds):
-       #     self.path_index = (self.path_index + 1) % len(self.path)  # Move to the next waypoint
-       #     return
-        # Only move if AI doesn't collide with boundaries
-        if not any(boundary.colliderect(new_rect) for boundary in track_bounds):
-            self.x += dx
-            self.y += dy
-            self.rect.topleft = (self.x, self.y)
-        else:
-            #self.path_index += 1  # Try next waypoint
-            (self.path_index + 1) % len(self.path)  # Move to the next waypoint
-            #return
-        '''
-    
-    ''' 
-        dx, dy = random.choice([(5, 0), (-5, 0), (0, 5), (0, -5)])
-        new_rect = self.rect.move(dx, dy)
+class ShieldPowerUp(PowerUp):
+    def __init__(self, x, y):
+        super().__init__(x, y, SHIELD_IMAGE)
 
-        for boundary in track_bounds:
-            if boundary.colliderect(new_rect):
-                return  # AI doesn't move into boundaries
-
-        self.x += dx
-        self.y += dy
-        self.rect.topleft = (self.x, self.y)  
-        '''
+    def apply_effect(self, chariot):
+        chariot.activate_shield()
 
 
+class SpeedBoost(PowerUp):
+    def __init__(self, x, y):
+        super().__init__(x, y, SPEED_BOOST_IMAGE)
+
+    def apply_effect(self, chariot):
+        chariot.activate_speed_boost()
+'''
 class ShieldPowerUp:
     def __init__(self, x, y):
         self.x, self.y = x, y
@@ -196,6 +189,9 @@ class ShieldPowerUp:
 
 class SpeedBoost:
     def __init__(self, x, y):
+        #self.image = pygame.image.load("assets/poweruppixel.png")
+        #self.image = pygame.transform.scale(self.image, (40, 40))
+        #self.rect = self.image.get_rect(topleft=(x, y))
         self.rect = pygame.Rect(x, y, 40, 40)
         self.image = pygame.Surface((40, 40))
         self.image.fill((255, 255, 0))
@@ -205,3 +201,4 @@ class SpeedBoost:
 
     def draw(self, screen):
         screen.blit(self.image, self.rect.topleft)
+        '''

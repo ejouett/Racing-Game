@@ -80,7 +80,7 @@ class RaceScreen:
         # Exit Button
         #new 3 lines
         self.player = Chariot(*self.start_pos)
-        self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1], self.ai_path) for i in range(4)]
+        self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1], self.ai_path, i) for i in range(4)]
         #self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1]) for i in range(4)]
         self.powerups = self.generate_powerups()
 
