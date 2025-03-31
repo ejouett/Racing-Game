@@ -27,7 +27,11 @@ class HomeScreen:
         }
 
         # Help button (Top right)
-        self.help_button = pygame.Rect(850, 30, 120, 50)
+        #self.help_button = pygame.Rect(850, 30, 120, 50)
+        # Load help button image newwww
+        self.help_button_img = pygame.image.load("assets/pixelated tutorial button.png")
+        self.help_button_img = pygame.transform.scale(self.help_button_img, (100, 50))
+        self.help_button_rect = self.help_button_img.get_rect(topleft=(850, 30))
 
     def draw_text(self, text, position):
         rendered_text = self.font.render(text, True, BLACK)
@@ -43,15 +47,18 @@ class HomeScreen:
                 self.draw_text(name, (button.x + 20, button.y + 30))
 
             # Draw Help button
-            pygame.draw.rect(self.screen, (150, 0, 0), self.help_button)
-            self.draw_text("Help", (self.help_button.x + 30, self.help_button.y + 10))
+            #pygame.draw.rect(self.screen, (150, 0, 0), self.help_button)
+            #self.draw_text("Help", (self.help_button.x + 30, self.help_button.y + 10))
+            # Draw Help button image newwwww
+            self.screen.blit(self.help_button_img, self.help_button_rect)
+            self.draw_text("How to Play", (800, 85))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return None
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.help_button.collidepoint(event.pos):
+                    if self.help_button_rect.collidepoint(event.pos):
                         self.show_help_screen()
                     for name, button in self.buttons.items():
                         if button.collidepoint(event.pos):
