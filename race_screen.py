@@ -1,7 +1,7 @@
 import pygame
 import random
 #from utils import Chariot, ShieldPowerUp
-from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost
+from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp
 #from track_data import TRACK_DETAILS
 
 WHITE, RED, BLUE = (255, 255, 255), (255, 0, 0), (0, 0, 255)
@@ -11,21 +11,17 @@ TRACK_DETAILS = {
     "assets/colosseum_track.png": {
         "start": (500, 680),
         "finish": pygame.Rect(550, 150, 20, 90),
+        #right, left, top, bottom, middle
         "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 140), pygame.Rect(25, 775, 800, 50), pygame.Rect(450, 260, 200, 350)],
         "ai_path": [(500, 680), (670, 620), (700, 500), (720, 400), (700, 230), (500, 150), (360, 200), (300, 300), (300, 500), (400, 640)]
-      #  "boundsLeft": [pygame.Rect(0, 50 , 250, 700)],
-       # "boundsTop": [pygame.Rect(80, 0, 750, 140)],
-      #  "boundsBottom": [pygame.Rect(25, 775, 800, 50)]
+      
     },
     "assets/greektracks.png": {
         "start": (500, 680),
         "finish": pygame.Rect(550, 150, 20, 90),
-        #"bounds": [pygame.Rect(800, 620, 300, 300)],
         # right, left, top, bottom, middle, upper right, upper left.
         "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 130), pygame.Rect(25, 750, 800, 50), pygame.Rect(450, 260, 210, 350), pygame.Rect(800, 50, 700, 300), pygame.Rect(0, 50, 300, 300)], 
         "ai_path": [(500, 680), (670, 620), (700, 500), (720, 400), (700, 230), (500, 150), (360, 200), (300, 300), (300, 500), (400, 640)]
-        #[(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
-
     },
      "assets/modern_track.png": {
         "start": (500, 680),
@@ -44,11 +40,25 @@ TRACK_DETAILS = {
 
 
 class RaceScreen:
-    def __init__(self, screen, track_image_path):
+    def __init__(self, screen, track_image_path, selected_chariot, game_mode):
         self.screen = screen
         self.track_img = pygame.image.load(track_image_path)
         self.track_img = pygame.transform.scale(self.track_img, (1100, 850))
+        self.selected_chariot = selected_chariot  # Store selected chariot
 
+        self.game_mode = game_mode  # Store the mode
+
+        self.falling_objects = []  # Objects in survival mode
+
+        """
+        # Apply chariot abilities
+        if self.selected_chariot == "health":
+            self.player_health = 120  # Default is 100
+        elif self.selected_chariot == "speed":
+            self.player_speed = 5.5  # Default is 5
+        elif self.selected_chariot == "bullets":
+            self.player_bullets = 2  # Default is 0
+        """
 
         if track_image_path == "assets/modern_track.png":
             self.track_img = pygame.transform.scale(self.track_img, (1300, 850))
@@ -58,19 +68,8 @@ class RaceScreen:
         if track_image_path not in TRACK_DETAILS:
             raise ValueError(f"Track details not found for: {track_image_path}")
 
-       # self.track_details = TRACK_DETAILS[track_image_path]
-
-        # Set start position safely
-       # self.start_pos = self.track_details.get("start")
-       # if self.start_pos is None:
-       #     raise ValueError(f"Missing 'start' position in track details for: {track_image_path}")
-
-
-        #self.track_details = TRACK_DETAILS[track_image_path]
+      
         self.track_data = TRACK_DETAILS[track_image_path] #new
-        #NO / self.powerups = [ShieldPowerUp(random.randint(100, 900), random.randint(100, 700)) for _ in range(3)]
-        #self.finish_zone = pygame.Rect(550, 150, 20, 90) #new
-        #self.track_bounds = [pygame.Rect(80, 80, 840, 701)]  # Adjust for track
         #self.player = Chariot(*self.track_data["start"])  # Spawn at track's start position
         self.start_pos = self.track_data["start"]
         self.finish_zone = self.track_data["finish"]
@@ -78,8 +77,10 @@ class RaceScreen:
         self.ai_path = self.track_data.get("ai_path", [])
        # self.player.laps = 0
         # Exit Button
-        #new 3 lines
-        self.player = Chariot(*self.start_pos)
+        #newwwww
+        self.player = Chariot(*self.start_pos, chariot_type=selected_chariot)
+
+        #self.player = Chariot(*self.start_pos)
         self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1], self.ai_path, i) for i in range(4)]
         #self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1]) for i in range(4)]
         self.powerups = self.generate_powerups()
@@ -87,11 +88,34 @@ class RaceScreen:
         self.exit_button = pygame.Rect(20, 720, 150, 50)
         self.font = pygame.font.Font(None, 36)
 
+        
+        if self.game_mode == "survival":
+            self.obstacles = [
+                pygame.Rect(random.randint(300,  800), random.randint(50, 1050), 40, 40)
+                for _ in range(50)
+            ]
+        
+    def spawn_falling_objects(self):
+        """Spawn objects in survival mode."""
+        if random.random() < 0.02:  # 2% chance per frame
+            x = random.randint(50, 1000)
+            self.falling_objects.append(pygame.Rect(x, 0, 30, 30))
+
+    def move_falling_objects(self):
+        """Move and detect collisions."""
+        for obj in self.falling_objects[:]:
+            obj.y += 5
+            pygame.draw.rect(self.screen, RED, obj)
+            if obj.y > 850:
+                self.falling_objects.remove(obj)
+
+
     def draw_exit_button(self):
         pygame.draw.rect(self.screen, RED, self.exit_button)
         text = self.font.render("Exit", True, WHITE)
         self.screen.blit(text, (self.exit_button.x + 50, self.exit_button.y + 10))
         
+
 
     def generate_powerups(self):
         powerups = []
@@ -117,6 +141,27 @@ class RaceScreen:
         pygame.draw.rect(surface, (255, 255, 255), (x, y, bar_width, bar_height), 2)  # White border
 
 
+
+    def run_survival_mode(self):
+        """Handles survival mode where player avoids obstacles for a time limit."""
+        self.screen.blit(self.player, self.obstacles)
+
+        # Spawn obstacles
+        for obstacle in self.obstacles:
+            pygame.draw.rect(self.screen, RED, obstacle)
+
+        # Check for collision with obstacles
+        for obstacle in self.obstacles:
+            if self.player_rect.colliderect(obstacle):
+                self.player.health -= 10
+                #return "lose"
+
+        # If time runs out, player wins
+        if self.player.health <= 0:
+            return "lose"
+        if self.player.laps >= 5:
+            return "win"
+
     def run(self):
         clock = pygame.time.Clock()
         running = True
@@ -125,6 +170,9 @@ class RaceScreen:
             clock.tick(30)
             self.screen.fill(WHITE)
             self.screen.blit(self.track_img, (0, 0))
+
+            #if self.game_mode == "survival":
+            #    self.run_survival_mode()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -152,6 +200,7 @@ class RaceScreen:
                     #self.player.activate_shield()
                     powerup.apply_effect(self.player) # new
                     self.powerups.remove(powerup)
+                    #self.powerups.respawn(powerup)
 
             # Draw elements
             #self.player.draw(self.screen)
@@ -163,6 +212,16 @@ class RaceScreen:
 
             # Draw health bar
             self.draw_health_bar(self.screen, self.player.health)
+
+            
+            if self.game_mode == "survival":
+                self.spawn_falling_objects()
+                self.move_falling_objects()
+                
+                
+                
+                
+
 
             # Draw all elements / new
             self.player.draw(self.screen)
@@ -192,10 +251,8 @@ class RaceScreen:
             #NO /if self.player.rect.colliderect(self.finish_zone): #new
                 print("Congratulations! You won!")
                 return "win"
-            #NO /if self.player.rect.colliderect(self.finish_zone):
-                 # new
-             #   print("Congratulations! You won!")
-             #   return "win"
+            
+            
             for ai in self.ai_opponents:
                 if ai.laps >= 55:
                     print("AI wins! You lost.")
@@ -203,3 +260,7 @@ class RaceScreen:
             pygame.draw.rect(self.screen, (200, 0, 0), self.finish_zone) # new
 
             pygame.display.update()
+
+    
+
+    

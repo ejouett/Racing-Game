@@ -17,6 +17,7 @@ def main():
     clock = pygame.time.Clock()
     current_screen = "home"  # Start at home screen
     selected_map = None
+    selected_chariot = None #newww
     
     home_screen = HomeScreen(SCREEN)
     race_screen = None  # Will be initialized when race starts
@@ -27,10 +28,17 @@ def main():
         clock.tick(30)
 
         if current_screen == "home":
-            selected_map = home_screen.run()
-            if selected_map:
-                race_screen = RaceScreen(SCREEN, selected_map)
-                current_screen = "race"
+            #selected_map = home_screen.run()
+            #if selected_map:
+            #    race_screen = RaceScreen(SCREEN, selected_map)
+            #    current_screen = "race"
+            result = home_screen.run()
+            if result is not None:  # Ensure result is valid before unpacking
+                selected_map, selected_chariot, game_mode = result
+                if selected_map and selected_chariot:
+                    #game_mode = home_screen.selected_modes.get(selected_map, "race")  # Get selected mode
+                    race_screen = RaceScreen(SCREEN, selected_map, selected_chariot, game_mode)
+                    current_screen = "race"
 
         elif current_screen == "race":
             race_result = race_screen.run()

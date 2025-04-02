@@ -12,24 +12,37 @@ SPEED_BOOST_IMAGE = pygame.transform.scale(SPEED_BOOST_IMAGE, (40, 40))
 
 # Load AI chariot images
 AI_CHARIOT_IMAGES = [
-    pygame.transform.scale(pygame.image.load("assets/chariot 2 pixel art.png"), (60, 40)),
+    pygame.transform.scale(pygame.image.load("assets/chariot pixel art.png"), (60, 40)),
     pygame.transform.scale(pygame.image.load("assets/chariot 2 pixel art.png"), (60, 40)),
     pygame.transform.scale(pygame.image.load("assets/chariot 3 pixel art.png"), (60, 40)),
     pygame.transform.scale(pygame.image.load("assets/chariot 3 pixel art.png"), (60, 40))
 ]
 
 class Chariot:
-    def __init__(self, x, y):
+    def __init__(self, x, y, chariot_type=0):
         self.x, self.y = x, y
         self.speed = 5
-        self.image = pygame.image.load("assets/chariot pixel art.png")
-        self.image = pygame.transform.scale(self.image, (60, 40))
-        self.rect = self.image.get_rect(topleft=(x, y))
+        #self.image = pygame.image.load("assets/chariot pixel art.png")
+        #self.image = pygame.transform.scale(self.image, (60, 40))
+        #self.rect = self.image.get_rect(topleft=(x, y))
         self.health = 100
         self.shield_active = False
         self.shield_timer = 0
         self.laps = 0
         self.speed_boost_active = False # new
+
+
+        self.chariot_type = chariot_type  # Store selected chariot index
+
+        # Load different chariot images
+        self.chariot_images = [
+            pygame.image.load("assets/chariot pixel art.png"),
+            pygame.image.load("assets/chariot 2 pixel art.png"),
+            pygame.image.load("assets/chariot 3 pixel art.png")
+        ]
+        self.image = pygame.transform.scale(self.chariot_images[self.chariot_type], (60, 40))
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+
 
     def move(self, keys, track_bounds):
         prev_x, prev_y = self.x, self.y
@@ -48,6 +61,8 @@ class Chariot:
 
     # Check for collisions and revert position if necessary
         if self.check_collision(track_bounds):
+            #self.x -= (self.x - prev_x) * 0.5
+            #self.y -= (self.y - prev_y) * 0.5
             self.x, self.y = prev_x, prev_y  # Revert to previous position
             self.rect.topleft = (self.x, self.y)  # Update rect position
 
@@ -60,7 +75,7 @@ class Chariot:
     def activate_speed_boost(self): # new
         self.speed = 7
         self.speed_boost_active = True
-        pygame.time.set_timer(pygame.USEREVENT + 1, 5000)  # Reset speed after 5 seconds
+        pygame.time.set_timer(pygame.USEREVENT + 1, 3000)  # Reset speed after 5 seconds
 
 
     def check_collision(self, track_bounds):
@@ -87,7 +102,10 @@ class Chariot:
     #    self.x -= self.speed * 2
     #    self.y -= self.speed * 2
     #    self.rect.topleft = (self.x, self.y)
-  
+    def respawn(self):
+        self.x = random.randint(100, 900)
+        self.y = random.randint(100, 700)
+        self.rect.topleft = (self.x, self.y)
 
     def activate_shield(self):
         self.shield_active = True
@@ -102,11 +120,7 @@ class AIOpponent(Chariot):
     def __init__(self, x, y, ai_path, ai_index):
         super().__init__(x, y)
         self.image = AI_CHARIOT_IMAGES[ai_index]  # Assign AI-specific image
-        #self.path = ai_path
-        #self.path = [(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
-        #self.path = [(100, 200), (300, 250), (500, 300), (700, 350), (900, 400), (1100, 450), (1300, 500), (1500, 550)]
-        #self.path_index = 0
-        self.speed = 4  # AI speed
+        self.speed = 4 + random.uniform(-0.5, 0.5) # AI speed
 
         #self.x = x
         #self.y = y
@@ -117,6 +131,9 @@ class AIOpponent(Chariot):
         self.laps_completed = 0
         self.total_laps = 5  # Same as the player
 
+        #self.rect = self.image.get_rect(center=(self.x, self.y))
+        self.rect = self.image.get_rect(topleft=(x, y))
+
     
     def move(self, track_bounds):
         if self.target_index < len(self.track_path):
@@ -125,8 +142,8 @@ class AIOpponent(Chariot):
             distance = math.hypot(dx, dy)
 
             if distance > 2:  # Move towards the waypoint
-                self.x += (dx / distance) * self.speed
-                self.y += (dy / distance) * self.speed
+                self.x += (dx / distance) * self.speed * 0.8
+                self.y += (dy / distance) * self.speed * 0.8
             else:
                 self.target_index += 1  # Move to the next waypoint
 
@@ -153,6 +170,7 @@ class PowerUp:
         self.image = image
         self.rect = self.image.get_rect(topleft=(x, y))
 
+
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
@@ -171,6 +189,8 @@ class SpeedBoost(PowerUp):
 
     def apply_effect(self, chariot):
         chariot.activate_speed_boost()
+
+
 '''
 class ShieldPowerUp:
     def __init__(self, x, y):
