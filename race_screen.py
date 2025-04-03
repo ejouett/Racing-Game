@@ -26,14 +26,16 @@ TRACK_DETAILS = {
      "assets/modern_track.png": {
         "start": (500, 680),
         "finish": pygame.Rect(550, 150, 20, 90),
-        "bounds": [pygame.Rect(800, 620, 300, 300)],
+        #right, top, left, bottom
+        "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160)],
         "ai_path": [(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
     },
     "assets/ancient_greece.png": {
-        "start": (600, 750),
+        "start": (800, 300),
         "finish": pygame.Rect(540, 320, 50, 20),
-        "bounds": [pygame.Rect(800, 150, 700, 500)],
-        "ai_path": [(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
+        #right, top, left, bottom, bottom right corner, top right corner, top left corner, bottom left corner
+        "bounds": [pygame.Rect(980, 150, 700, 500), pygame.Rect(0, 0, 980, 160), pygame.Rect(0, 0, 100, 800), pygame.Rect(0, 770, 980, 160), pygame.Rect(970, 650, 980, 160), pygame.Rect(960, 660, 980, 160), pygame.Rect(950, 670, 980, 160), pygame.Rect(950, 710, 980, 160), pygame.Rect(920, 725, 980, 160)],
+        "ai_path": [(800, 300), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
     }
     
 }
