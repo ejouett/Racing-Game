@@ -46,6 +46,12 @@ class HomeScreen:
             "New modern track": "assets/modern_track.png"
         }
 
+        # Load and scale track images
+        self.track_images = {
+            name: pygame.transform.scale(pygame.image.load(path), (BUTTON_WIDTH, BUTTON_HEIGHT))
+            for name, path in self.track_paths.items()
+        }
+
         #self.help_button = pygame.Rect(850, 30, 120, 50)
         # Load help button image newwww
         self.help_button_img = pygame.image.load("assets/pixelated tutorial button.png")
@@ -86,9 +92,10 @@ class HomeScreen:
             self.draw_text("Select a Race Track", (350, 200))
             # Draw track selection buttons
             for name, button in self.buttons.items():
-                pygame.draw.rect(self.screen, BLUE, button)
-                self.draw_text(name, (button.x + 20, button.y + 30))
-
+                #pygame.draw.rect(self.screen, BLUE, button)
+                #self.draw_text(name, (button.x + 20, button.y + 30))
+                self.screen.blit(self.track_images[name], (button.x, button.y))  # Draw track image
+                pygame.draw.rect(self.screen, BLACK, button, 3)  # Optional: Outline for visibility
 
                 # Draw Survival Mode toggle  NEW
                 mode_x, mode_y = self.mode_buttons[name]
