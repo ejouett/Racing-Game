@@ -34,16 +34,16 @@ class HomeScreen:
 
         # Buttons for track selection
         self.buttons = {
-            "Colosseum Map": pygame.Rect(350, 250, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "Greek Track": pygame.Rect(350, 400, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "New Track": pygame.Rect(350, 550, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "New modern track": pygame.Rect(350, 700, BUTTON_WIDTH, BUTTON_HEIGHT)
+            "Colosseum Map 1": pygame.Rect(350, 250, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Colosseum Map 2": pygame.Rect(350, 400, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Greek Track": pygame.Rect(350, 550, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Modern track": pygame.Rect(350, 690, BUTTON_WIDTH, BUTTON_HEIGHT)
         }
         self.track_paths = {
-            "Colosseum Map": "assets/colosseum_track.png",
-            "Greek Track": "assets/greektracks.png",
-            "New Track": "assets/ancient_greece.png",
-            "New modern track": "assets/modern_track.png"
+            "Colosseum Map 1": "assets/colosseum_track.png",
+            "Colosseum Map 2": "assets/greektracks.png",
+            "Greek Track": "assets/ancient_greece.png",
+            "Modern track": "assets/modern_track.png"
         }
 
         # Load and scale track images
@@ -93,7 +93,7 @@ class HomeScreen:
             # Draw track selection buttons
             for name, button in self.buttons.items():
                 #pygame.draw.rect(self.screen, BLUE, button)
-                #self.draw_text(name, (button.x + 20, button.y + 30))
+                self.draw_text(name, (button.x - 300, button.y + 30))
                 self.screen.blit(self.track_images[name], (button.x, button.y))  # Draw track image
                 pygame.draw.rect(self.screen, BLACK, button, 3)  # Optional: Outline for visibility
 
@@ -162,22 +162,26 @@ class HomeScreen:
             self.draw_text("How to Play:", (350, 100))
 
             instructions = [
-                "1. Use arrow keys to move your chariot.",
-                "2. Avoid crashing into the track boundaries.",
-                "3. Reach the finish line before running out of health.",
-                "4. Collect power-ups to boost your abilities.",
-                "5. Click 'Exit' to return to the home screen."
+                "1. Choose your chariot. Click Red button to make Green.",
+                "2. Choose Game mode, survival or race. Red is Race",
+                "3. If you click button to green it will be survival.",
+                "4. Surival is race with added objects you must dodge",
+                "5. Use arrow keys to move your chariot.",
+                "6. Avoid crashing into the track boundaries and AI.",
+                "7. Reach 5 laps before running out of health or losing.",
+                "8. Collect power-ups to boost your abilities.",
+                "9. Click 'Exit' to return to the home screen."
             ]
 
             y_position = 200
             for instruction in instructions:
-                self.draw_text(instruction, (200, y_position))
+                self.draw_text(instruction, (50, y_position))
                 y_position += 50
 
             # Back button
-            back_button = pygame.Rect(400, 600, 200, 50)
+            back_button = pygame.Rect(400, 670, 200, 50)
             pygame.draw.rect(self.screen, BLUE, back_button)
-            self.draw_text("Back", (450, 610))
+            self.draw_text("Back", (450, 680))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
