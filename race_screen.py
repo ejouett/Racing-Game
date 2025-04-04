@@ -28,7 +28,7 @@ TRACK_DETAILS = {
         "finish": pygame.Rect(550, 150, 20, 90),
         #right, top, left, bottom, bottom right, inside top rec, middle inside rec, middle left inside, bottom inside horizontal rec, very bottom inside, rightside indent outside, leftside indent outside
         "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160), pygame.Rect(350, 555, 80, 300), pygame.Rect(480, 140, 350, 100), pygame.Rect(615, 250, 210, 180), pygame.Rect(480, 400, 180, 70), pygame.Rect(560, 480, 70, 230), pygame.Rect(630, 710, 200, 8), pygame.Rect(770, 520, 200, 120), pygame.Rect(340, 320, 160, 7)],
-        "ai_path": [(500, 680), (700, 500), (900, 300), (700, 150), (500, 100), (300, 150), (100, 300), (300, 500)]
+        "ai_path": [(460, 630), (480, 730), (810, 730), (865, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
     },
     "assets/ancient_greece.png": {
         "start": (800, 300),
