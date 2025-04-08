@@ -21,7 +21,7 @@ AI_CHARIOT_IMAGES = [
 class Chariot:
     def __init__(self, x, y, chariot_type=0):
         self.x, self.y = x, y
-        self.speed = 5
+        self.speed = 4
         #self.image = pygame.image.load("assets/chariot pixel art.png")
         #self.image = pygame.transform.scale(self.image, (60, 40))
         #self.rect = self.image.get_rect(topleft=(x, y))
@@ -73,9 +73,9 @@ class Chariot:
 
 
     def activate_speed_boost(self): # new
-        self.speed = 7
+        self.speed = 6
         self.speed_boost_active = True
-        pygame.time.set_timer(pygame.USEREVENT + 1, 3000)  # Reset speed after 5 seconds
+        pygame.time.set_timer(pygame.USEREVENT + 1, 1000)  # Reset speed after 5 seconds
 
 
     def check_collision(self, track_bounds):
