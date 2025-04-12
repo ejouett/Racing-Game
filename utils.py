@@ -30,6 +30,7 @@ class Chariot:
         self.shield_timer = 0
         self.laps = 0
         self.speed_boost_active = False # new
+        self.passed_finish = False  # New attribute
 
 
         self.chariot_type = chariot_type  # Store selected chariot index
@@ -44,7 +45,7 @@ class Chariot:
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
 
-    def move(self, keys, track_bounds):
+    def move(self, keys, track_bounds, finish_zone):
         prev_x, prev_y = self.x, self.y
         
         if keys[pygame.K_LEFT] and self.x > 0:
@@ -66,8 +67,19 @@ class Chariot:
             self.x, self.y = prev_x, prev_y  # Revert to previous position
             self.rect.topleft = (self.x, self.y)  # Update rect position
 
-         # might put back   self.rect.topleft = (self.x, self.y)
+        
+        if self.rect.colliderect(finish_zone):
+            if not self.passed_finish:
+                self.laps += 1
+                self.passed_finish = True  # Prevent counting again until they leave
+        else:
+            self.passed_finish = False  # Reset flag once they've left the finish line
 
+         # might put back   self.rect.topleft = (self.x, self.y)
+        #if self.rect.colliderect(finish_zone):
+        
+          #  self.laps += 1
+         #   print(f"Collision! lap: {self.laps}")
     #def draw(self, screen):
     #    pygame.draw.rect(screen, (0, 0, 255), self.rect)
 
@@ -85,6 +97,7 @@ class Chariot:
                 if not self.shield_active:
                     self.health -= 0.5  # Reduce health if no shield
                     print(f"Collision! Health: {self.health}")
+                   
                 return True  # Collision detected
         return False  # No collision
         
@@ -102,6 +115,7 @@ class Chariot:
     #    self.x -= self.speed * 2
     #    self.y -= self.speed * 2
     #    self.rect.topleft = (self.x, self.y)
+
     def respawn(self):
         self.x = random.randint(100, 900)
         self.y = random.randint(100, 700)
@@ -130,12 +144,13 @@ class AIOpponent(Chariot):
         self.target_index = 0  # Start at first waypoint
         self.laps_completed = 0
         self.total_laps = 5  # Same as the player
+        self.passed_finish = False  # New attribute
 
         #self.rect = self.image.get_rect(center=(self.x, self.y))
         self.rect = self.image.get_rect(topleft=(x, y))
 
     
-    def move(self, track_bounds):
+    def move(self, track_bounds, finish_zone):
         if self.target_index < len(self.track_path):
             target_x, target_y = self.track_path[self.target_index]
             dx, dy = target_x - self.x, target_y - self.y
@@ -155,6 +170,15 @@ class AIOpponent(Chariot):
                 print("AI Wins!")
                 pygame.quit()
                 #sys.exit()
+
+
+        if self.rect.colliderect(finish_zone):
+            if not self.passed_finish:
+                self.laps += 1
+                print(f"AI Laps: {self.laps}")
+                self.passed_finish = True  # Prevent counting again until they leave
+        else:
+            self.passed_finish = False  # Reset flag once they've left the finish line
 
 
         new_rect = self.rect.move(dx, dy)

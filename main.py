@@ -44,6 +44,10 @@ def main():
             race_result = race_screen.run()
             if race_result in ["win", "lose", "exit", "quit"]:  # Return to home on finish
                 current_screen = "home"
+            if race_result == "restart":
+                # Restart race with the same settings
+                race_screen = RaceScreen(SCREEN, selected_map, selected_chariot, game_mode)
+                current_screen = "race"
 
         pygame.display.update()
 

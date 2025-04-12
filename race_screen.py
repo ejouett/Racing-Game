@@ -12,15 +12,15 @@ TRACK_DETAILS = {
         "start": (500, 680),
         "finish": pygame.Rect(550, 150, 20, 90),
         #right, left, top, bottom, middle
-        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 140), pygame.Rect(25, 775, 800, 50), pygame.Rect(450, 260, 200, 350)],
+        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 140), pygame.Rect(25, 775, 800, 50), pygame.Rect(450, 260, 200, 350), pygame.Rect(800, 650, 250, 700), pygame.Rect(750, 700, 250, 700), pygame.Rect(775, 0, 450, 180), pygame.Rect(800, 800, 350, 220), pygame.Rect(0, 0, 320, 190), pygame.Rect(0, 0, 340, 160), pygame.Rect(0, 650, 300, 700), pygame.Rect(0, 700, 340, 700)],
         "ai_path": [(500, 680), (670, 620), (700, 500), (720, 400), (700, 230), (500, 150), (360, 200), (300, 300), (300, 500), (400, 640)]
       
     },
     "assets/greektracks.png": {
         "start": (500, 680),
-        "finish": pygame.Rect(550, 150, 20, 90),
+        "finish": pygame.Rect(550, 160, 20, 60),
         # right, left, top, bottom, middle, upper right, upper left.
-        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 130), pygame.Rect(25, 750, 800, 50), pygame.Rect(450, 260, 210, 350), pygame.Rect(800, 50, 700, 300), pygame.Rect(0, 50, 300, 300)], 
+        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 130), pygame.Rect(25, 750, 800, 50), pygame.Rect(450, 260, 210, 350), pygame.Rect(800, 50, 700, 300), pygame.Rect(0, 50, 300, 300), pygame.Rect(800, 650, 250, 700), pygame.Rect(750, 700, 250, 700), pygame.Rect(775, 0, 450, 180), pygame.Rect(800, 800, 350, 220), pygame.Rect(0, 0, 320, 190), pygame.Rect(0, 0, 340, 160), pygame.Rect(0, 650, 300, 700), pygame.Rect(0, 700, 340, 700)], 
         "ai_path": [(500, 680), (670, 620), (700, 550), (700, 500), (720, 400), (690, 230), (510, 155), (370, 200), (320, 300), (310, 500), (350, 590), (400, 640)]
     },
      "assets/modern_track.png": {
@@ -77,6 +77,7 @@ class RaceScreen:
         self.finish_zone = self.track_data["finish"]
         self.track_bounds = self.track_data["bounds"]
         self.ai_path = self.track_data.get("ai_path", [])
+        self.score = 0
        # self.player.laps = 0
         # Exit Button
         #newwwww
@@ -109,6 +110,10 @@ class RaceScreen:
             obj.y += 5
             pygame.draw.rect(self.screen, RED, obj)
             if obj.y > 850:
+                self.falling_objects.remove(obj)
+            elif self.player.rect.colliderect(obj):
+                if not self.player.shield_active:
+                    self.player.health -= 10
                 self.falling_objects.remove(obj)
 
 
@@ -144,25 +149,87 @@ class RaceScreen:
 
 
 
-    def run_survival_mode(self):
-        """Handles survival mode where player avoids obstacles for a time limit."""
-        self.screen.blit(self.player, self.obstacles)
+    def reset_game(self):
+       # keys = pygame.key.get_pressed()
+      #  if keys[pygame.K_q]:
+       #     return "exit"  # Will go back to home
+       # if keys[pygame.K_r]:
+       #     return "restart"  # Trigger race restart
+        result = "restart"
+        return result
+    # Reset player, AI, laps, positions, etc.
+       # self.__init__(self.screen)  # Simple but works if it reinitializes
 
-        # Spawn obstacles
-        for obstacle in self.obstacles:
-            pygame.draw.rect(self.screen, RED, obstacle)
+    def go_to_home(self):
+        #from home_screen import HomeScreen
+        #home = HomeScreen(self.screen)
+        result = "home"
+        return result
+        # Handle what comes back from home.run()
 
-        # Check for collision with obstacles
-        for obstacle in self.obstacles:
-            if self.player_rect.colliderect(obstacle):
-                self.player.health -= 10
-                #return "lose"
 
-        # If time runs out, player wins
-        if self.player.health <= 0:
-            return "lose"
-        if self.player.laps >= 5:
-            return "win"
+    def show_end_screen(self, win):
+        running = True
+        font = pygame.font.Font(None, 70)
+        button_font = pygame.font.Font(None, 40)
+
+        result_text = "You Win!" if win else "You Lose!"
+        result_color = (0, 200, 0) if win else (200, 0, 0)
+        # Draw Restart button
+        if result_text.lower() == "you win!":
+            if self.player.health > 90:
+                grade = "A"
+            elif self.player.health > 70:
+                grade = "B"
+            elif self.player.health > 50:
+                grade = "C"
+            elif self.player.health > 0:
+                grade = "D"
+            else:
+                grade = "F"
+        else:
+            grade = "F"
+
+        grade_font = pygame.font.SysFont(None, 50)
+        grade_text = grade_font.render(f"Grade: {grade}", True, (0, 0, 0))
+        grade_rect = grade_text.get_rect(center=(500, 330))
+            # Buttons
+        # Draw Restart button
+        
+        home_button = pygame.Rect(400, 400, 200, 50)
+        #replay_text = button_font.render("Press R to Replay", True, (0, 0, 0))
+
+        while running:
+            self.screen.fill((255, 255, 255))
+            title = font.render(result_text, True, result_color)
+            self.screen.blit(title, (400, 200))
+            pygame.draw.rect(self.screen, (0, 0, 200), home_button)
+            self.screen.blit(button_font.render("Back to Home", True, (255, 255, 255)), (home_button.x + 20, home_button.y + 10))
+            #self.screen.blit(replay_text, (380, 300))
+            self.screen.blit(grade_text, grade_rect)
+            lap_text = font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
+            self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
+
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.reset_game()  # You'll implement this
+                        return 
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if home_button.collidepoint(event.pos):
+                        self.go_to_home()  # You'll implement this
+                        return
+                    
+                    
+    
+
+                    
+
+            pygame.display.flip()
 
     def run(self):
         clock = pygame.time.Clock()
@@ -184,16 +251,25 @@ class RaceScreen:
                     if self.exit_button.collidepoint(event.pos):
                         return "exit"  # Go back to home screen
                 
-
+            
             keys = pygame.key.get_pressed()
-            self.player.move(keys, self.track_bounds)
+            self.player.move(keys, self.track_bounds, self.finish_zone)
             #self.player.move(keys)
             self.player.check_collision(self.track_bounds) #new
-    
-            
+            if keys[pygame.K_r]:  # If "R" key is pressed
+                return "restart"
+            '''
+            if self.player.rect.colliderect(self.finish_zone):
+                if not self.passed_finish:
+                    self.player.laps += 1
+                    self.passed_finish = True  # Prevent counting again until they leave
+            else:
+                self.passed_finish = False  # Reset flag once they've left the finish line
+            '''
+
             # AI Movement / new
             for ai in self.ai_opponents:
-                ai.move(self.track_bounds)
+                ai.move(self.track_bounds, self.finish_zone)
             
 
             # Power-ups
@@ -203,11 +279,15 @@ class RaceScreen:
                     powerup.apply_effect(self.player) # new
                     self.powerups.remove(powerup)
                     #self.powerups.respawn(powerup)
+                    #self.powerups.respawn(powerup)
 
             # Draw elements
             #self.player.draw(self.screen)
             #for powerup in self.powerups:
             #    powerup.draw(self.screen)
+                    #draw laps
+            lap_text = self.font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
+            self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
 
                 # Draw Exit Button
             self.draw_exit_button()
@@ -234,35 +314,43 @@ class RaceScreen:
                 powerup.draw(self.screen)
 
             # Check lap completion / new
-            if self.player.rect.colliderect(self.finish_zone):
-                self.player.laps += 1
-                print(f"Player Laps: {self.player.laps}")
+           # if self.player.rect.colliderect(self.finish_zone):
+            #    self.player.laps += 1
+            #    print(f"Player Laps: {self.player.laps}")
               
             # Check if AI crosses the finish line
+                '''
             for ai in self.ai_opponents:
                 if ai.rect.colliderect(self.finish_zone):
                     ai.laps += 1
                     print(f"AI Laps: {ai.laps}")
-            
+            '''
             # Check game over conditions
             if self.player.health <= 0:
                 print("Game Over! You lost!")
                 return "lose"
 
-            if self.player.laps >= 50:
+            if self.player.laps >= 5:
+                self.show_end_screen(win=True)
+            elif any(ai.laps >= 5 for ai in self.ai_opponents):
+                self.show_end_screen(win=False)
+
+
+
+            if self.player.laps >= 5:
             #NO /if self.player.rect.colliderect(self.finish_zone): #new
                 print("Congratulations! You won!")
                 return "win"
             
             
             for ai in self.ai_opponents:
-                if ai.laps >= 55:
+                if ai.laps >= 5:
                     print("AI wins! You lost.")
                     return "lose"
             pygame.draw.rect(self.screen, (200, 0, 0), self.finish_zone) # new
 
             pygame.display.update()
 
-    
+
 
     
