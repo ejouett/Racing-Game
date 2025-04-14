@@ -4,10 +4,10 @@ import math
 
 WIDTH, HEIGHT = 1000, 800
 
-SHIELD_IMAGE = pygame.image.load("assets/shieldpoweruppixel.png")
+SHIELD_IMAGE = pygame.image.load("assets/Updated Shield Transparent Pixelated.png")
 SHIELD_IMAGE = pygame.transform.scale(SHIELD_IMAGE, (40, 40))
 
-SPEED_BOOST_IMAGE = pygame.image.load("assets/poweruppixel.png")
+SPEED_BOOST_IMAGE = pygame.image.load("assets/Speedboost v3 transparent.png")
 SPEED_BOOST_IMAGE = pygame.transform.scale(SPEED_BOOST_IMAGE, (40, 40))
 
 # Load AI chariot images

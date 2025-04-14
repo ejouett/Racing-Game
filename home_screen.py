@@ -54,7 +54,7 @@ class HomeScreen:
 
         #self.help_button = pygame.Rect(850, 30, 120, 50)
         # Load help button image newwww
-        self.help_button_img = pygame.image.load("assets/pixelated tutorial button.png")
+        self.help_button_img = pygame.image.load("assets/pixaated tutorial button transparent.png")
         self.help_button_img = pygame.transform.scale(self.help_button_img, (100, 50))
         self.help_button_rect = self.help_button_img.get_rect(topleft=(850, 30))
 
