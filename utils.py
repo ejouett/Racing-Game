@@ -145,6 +145,7 @@ class AIOpponent(Chariot):
         self.laps_completed = 0
         self.total_laps = 5  # Same as the player
         self.passed_finish = False  # New attribute
+       
 
         #self.rect = self.image.get_rect(center=(self.x, self.y))
         self.rect = self.image.get_rect(topleft=(x, y))

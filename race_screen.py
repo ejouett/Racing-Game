@@ -150,19 +150,12 @@ class RaceScreen:
 
 
     def reset_game(self):
-       # keys = pygame.key.get_pressed()
-      #  if keys[pygame.K_q]:
-       #     return "exit"  # Will go back to home
-       # if keys[pygame.K_r]:
-       #     return "restart"  # Trigger race restart
-        result = "restart"
-        return result
+        #result = "restart"
+        return "restart"
     # Reset player, AI, laps, positions, etc.
        # self.__init__(self.screen)  # Simple but works if it reinitializes
 
     def go_to_home(self):
-        #from home_screen import HomeScreen
-        #home = HomeScreen(self.screen)
         result = "home"
         return result
         # Handle what comes back from home.run()
@@ -210,7 +203,7 @@ class RaceScreen:
             lap_text = font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
             self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
 
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -224,11 +217,9 @@ class RaceScreen:
                         self.go_to_home()  # You'll implement this
                         return
                     
-                    
+            
+
     
-
-                    
-
             pygame.display.flip()
 
     def run(self):
@@ -326,25 +317,30 @@ class RaceScreen:
                     print(f"AI Laps: {ai.laps}")
             '''
             # Check game over conditions
+           # if self.player.health <= 0:
+           #     print("Game Over! You lost!")
+           #     return "lose"
+
+            if self.player.laps >= 1:
+                self.show_end_screen(win=True)
+            elif any(ai.laps >= 1 for ai in self.ai_opponents):
+                self.show_end_screen(win=False)
+            elif self.player.health <= 0:
+                self.show_end_screen(win=False)
+
+
             if self.player.health <= 0:
                 print("Game Over! You lost!")
                 return "lose"
 
-            if self.player.laps >= 5:
-                self.show_end_screen(win=True)
-            elif any(ai.laps >= 5 for ai in self.ai_opponents):
-                self.show_end_screen(win=False)
-
-
-
-            if self.player.laps >= 5:
+            if self.player.laps >= 1:
             #NO /if self.player.rect.colliderect(self.finish_zone): #new
                 print("Congratulations! You won!")
                 return "win"
             
             
             for ai in self.ai_opponents:
-                if ai.laps >= 5:
+                if ai.laps >= 1:
                     print("AI wins! You lost.")
                     return "lose"
             pygame.draw.rect(self.screen, (200, 0, 0), self.finish_zone) # new
