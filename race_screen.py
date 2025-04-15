@@ -321,9 +321,9 @@ class RaceScreen:
            #     print("Game Over! You lost!")
            #     return "lose"
 
-            if self.player.laps >= 1:
+            if self.player.laps >= 2:
                 self.show_end_screen(win=True)
-            elif any(ai.laps >= 1 for ai in self.ai_opponents):
+            elif any(ai.laps >= 2 for ai in self.ai_opponents):
                 self.show_end_screen(win=False)
             elif self.player.health <= 0:
                 self.show_end_screen(win=False)
@@ -333,14 +333,14 @@ class RaceScreen:
                 print("Game Over! You lost!")
                 return "lose"
 
-            if self.player.laps >= 1:
+            if self.player.laps >= 2:
             #NO /if self.player.rect.colliderect(self.finish_zone): #new
                 print("Congratulations! You won!")
                 return "win"
             
             
             for ai in self.ai_opponents:
-                if ai.laps >= 1:
+                if ai.laps >= 2:
                     print("AI wins! You lost.")
                     return "lose"
             pygame.draw.rect(self.screen, (200, 0, 0), self.finish_zone) # new
