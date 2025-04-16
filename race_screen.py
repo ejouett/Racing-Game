@@ -1,7 +1,7 @@
 import pygame
 import random
 #from utils import Chariot, ShieldPowerUp
-from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp
+from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle
 #from track_data import TRACK_DETAILS
 
 WHITE, RED, BLUE = (255, 255, 255), (255, 0, 0), (0, 0, 255)
@@ -20,15 +20,15 @@ TRACK_DETAILS = {
         "start": (500, 680),
         "finish": pygame.Rect(550, 160, 20, 60),
         # right, left, top, bottom, middle, upper right, upper left.
-        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 130), pygame.Rect(25, 750, 800, 50), pygame.Rect(450, 260, 210, 350), pygame.Rect(800, 50, 700, 300), pygame.Rect(0, 50, 300, 300), pygame.Rect(800, 650, 250, 700), pygame.Rect(750, 700, 250, 700), pygame.Rect(775, 0, 450, 180), pygame.Rect(800, 800, 350, 220), pygame.Rect(0, 0, 320, 190), pygame.Rect(0, 0, 340, 160), pygame.Rect(0, 650, 300, 700), pygame.Rect(0, 700, 340, 700)], 
-        "ai_path": [(500, 680), (670, 620), (700, 550), (700, 500), (720, 400), (690, 230), (510, 155), (370, 200), (320, 300), (310, 500), (350, 590), (400, 640)]
+        "bounds": [pygame.Rect(850, 50, 750, 700), pygame.Rect(0, 50, 250, 700), pygame.Rect(80, 0, 750, 130), pygame.Rect(25, 750, 800, 50), pygame.Rect(450, 260, 200, 350), pygame.Rect(800, 50, 700, 300), pygame.Rect(0, 50, 300, 300), pygame.Rect(800, 650, 250, 700), pygame.Rect(750, 700, 250, 700), pygame.Rect(775, 0, 450, 180), pygame.Rect(800, 800, 350, 220), pygame.Rect(0, 0, 320, 190), pygame.Rect(0, 0, 340, 160), pygame.Rect(0, 650, 300, 700), pygame.Rect(0, 700, 340, 700)], 
+        "ai_path": [(500, 680), (670, 620), (700, 550), (710, 500), (720, 400), (690, 220), (590, 180), (510, 155), (370, 200), (320, 300), (310, 500), (350, 590), (400, 640)]
     },
      "assets/modern_track.png": {
         "start": (460, 630),
         "finish": pygame.Rect(450, 550, 85, 20),
         #right, top, left, bottom, bottom right, inside top rec, middle inside rec, middle left inside, bottom inside horizontal rec, very bottom inside, rightside indent outside, leftside indent outside
         "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160), pygame.Rect(350, 555, 80, 300), pygame.Rect(480, 140, 350, 100), pygame.Rect(615, 250, 210, 180), pygame.Rect(480, 400, 180, 70), pygame.Rect(560, 480, 70, 230), pygame.Rect(630, 710, 200, 8), pygame.Rect(770, 520, 200, 120), pygame.Rect(340, 320, 160, 7)],
-        "ai_path": [(460, 630), (480, 730), (810, 730), (865, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
+        "ai_path": [(460, 630), (480, 740), (810, 745), (885, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
     },
     "assets/ancient_greece.png": {
         "start": (800, 300),
@@ -84,9 +84,11 @@ class RaceScreen:
         self.player = Chariot(*self.start_pos, chariot_type=selected_chariot)
 
         #self.player = Chariot(*self.start_pos)
-        self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1], self.ai_path, i) for i in range(4)]
+        self.ai_opponents = [AIOpponent(self.start_pos[0] - (i * 40), self.start_pos[1], self.ai_path, i) for i in range(3)]
         #self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1]) for i in range(4)]
         self.powerups = self.generate_powerups()
+        #self.dust_particles = []
+
 
         self.exit_button = pygame.Rect(20, 720, 150, 50)
         self.font = pygame.font.Font(None, 36)
@@ -152,13 +154,13 @@ class RaceScreen:
     def reset_game(self):
         #result = "restart"
         return "restart"
-    # Reset player, AI, laps, positions, etc.
-       # self.__init__(self.screen)  # Simple but works if it reinitializes
+        # Reset player, AI, laps, positions, etc.
+       # self.__init__(self.screen)  # Simple but works
 
     def go_to_home(self):
         result = "home"
         return result
-        # Handle what comes back from home.run()
+        # Handle what comes back from home.run() go to home screen
 
 
     def show_end_screen(self, win):
@@ -242,40 +244,29 @@ class RaceScreen:
                     if self.exit_button.collidepoint(event.pos):
                         return "exit"  # Go back to home screen
                 
-            
+            #For When keys are pressed and player is moving
             keys = pygame.key.get_pressed()
             self.player.move(keys, self.track_bounds, self.finish_zone)
             #self.player.move(keys)
             self.player.check_collision(self.track_bounds) #new
-            if keys[pygame.K_r]:  # If "R" key is pressed
+            if keys[pygame.K_r]:  # If "R" key is pressed during game you restart the map
                 return "restart"
-            '''
-            if self.player.rect.colliderect(self.finish_zone):
-                if not self.passed_finish:
-                    self.player.laps += 1
-                    self.passed_finish = True  # Prevent counting again until they leave
-            else:
-                self.passed_finish = False  # Reset flag once they've left the finish line
-            '''
+           
 
             # AI Movement / new
             for ai in self.ai_opponents:
                 ai.move(self.track_bounds, self.finish_zone)
             
-
-            # Power-ups
+            
+            # Power-ups handles collide, apply, and remove
             for powerup in self.powerups[:]:
                 if self.player.rect.colliderect(powerup):
                     #self.player.activate_shield()
                     powerup.apply_effect(self.player) # new
                     self.powerups.remove(powerup)
                     #self.powerups.respawn(powerup)
-                    #self.powerups.respawn(powerup)
-
+            
             # Draw elements
-            #self.player.draw(self.screen)
-            #for powerup in self.powerups:
-            #    powerup.draw(self.screen)
                     #draw laps
             lap_text = self.font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
             self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
@@ -287,40 +278,24 @@ class RaceScreen:
             self.draw_health_bar(self.screen, self.player.health)
 
             
+            #Check if its survival mode and spawn objects
             if self.game_mode == "survival":
                 self.spawn_falling_objects()
                 self.move_falling_objects()
                 
                 
                 
-                
-
-
             # Draw all elements / new
             self.player.draw(self.screen)
             for ai in self.ai_opponents:
                 ai.draw(self.screen)
 
+            #draw powerups
             for powerup in self.powerups: #new
                 powerup.draw(self.screen)
 
-            # Check lap completion / new
-           # if self.player.rect.colliderect(self.finish_zone):
-            #    self.player.laps += 1
-            #    print(f"Player Laps: {self.player.laps}")
-              
-            # Check if AI crosses the finish line
-                '''
-            for ai in self.ai_opponents:
-                if ai.rect.colliderect(self.finish_zone):
-                    ai.laps += 1
-                    print(f"AI Laps: {ai.laps}")
-            '''
-            # Check game over conditions
-           # if self.player.health <= 0:
-           #     print("Game Over! You lost!")
-           #     return "lose"
-
+          
+            #Go to end screen after match to see grade and result 
             if self.player.laps >= 2:
                 self.show_end_screen(win=True)
             elif any(ai.laps >= 2 for ai in self.ai_opponents):
