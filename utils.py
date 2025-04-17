@@ -13,6 +13,8 @@ SPEED_BOOST_IMAGE = pygame.transform.scale(SPEED_BOOST_IMAGE, (40, 40))
 DUST_IMAGE = pygame.image.load("assets/dusty.png")
 DUST_IMAGE = pygame.transform.scale(DUST_IMAGE, (30, 30))
 
+CRASH_IMAGE = pygame.image.load("assets/crash.png")
+CRASH_IMAGE = pygame.transform.scale(CRASH_IMAGE, (60, 60))
 '''
 # Load AI chariot images
 AI_CHARIOT_IMAGES = [
@@ -60,6 +62,7 @@ class Chariot:
         self.drift_rotation_multiplier = 2.0
         self.drift_speed_multiplier = 0.85
         self.dust_particles = []  #dust list for visual effect when turning
+        self.crash_particles = []
 
 
 
@@ -145,6 +148,7 @@ class Chariot:
     def check_collision(self, track_bounds):
         for boundary in track_bounds:
             if self.rect.colliderect(boundary):
+                self.crash_particles.append(CrashParticle(self.pos.x, self.pos.y))
                 #self.health -= .5
                 if not self.shield_active:
                     self.health -= 0.5  # Reduce health if no shield
@@ -195,6 +199,12 @@ class Chariot:
             dust.draw(screen)
             if dust.life <= 0:
                 self.dust_particles.remove(dust)
+
+        for crash in self.crash_particles[:]:
+            crash.update()
+            crash.draw(screen)
+            if crash.life <= 0:
+                self.crash_particles.remove(crash)
                 
         rotated_image = pygame.transform.rotate(self.image, self.angle + 180)
         rect = rotated_image.get_rect(topleft=self.pos)
@@ -298,7 +308,22 @@ class DustParticle:
     def draw(self, screen):
         screen.blit(self.image, self.pos)
 
+
+
+class CrashParticle:
+    def __init__(self, x, y):
+        self.image = CRASH_IMAGE.copy()
+        self.pos = pygame.Vector2(x, y)
+        self.life = 10  # Frames it will stay
+
+    def update(self):
+        self.life -= 1
+
+    def draw(self, screen):
+        screen.blit(self.image, self.pos)
    
+
+
 
 class PowerUp:
     def __init__(self, x, y, image):

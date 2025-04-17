@@ -1,7 +1,7 @@
 import pygame
 import random
 #from utils import Chariot, ShieldPowerUp
-from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle
+from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle, CrashParticle
 #from track_data import TRACK_DETAILS
 
 WHITE, RED, BLUE = (255, 255, 255), (255, 0, 0), (0, 0, 255)
@@ -61,10 +61,8 @@ class RaceScreen:
         elif self.selected_chariot == "bullets":
             self.player_bullets = 2  # Default is 0
         """
-
         if track_image_path == "assets/modern_track.png":
             self.track_img = pygame.transform.scale(self.track_img, (1300, 850))
-
 
         # Ensure track details exist
         if track_image_path not in TRACK_DETAILS:
@@ -83,6 +81,7 @@ class RaceScreen:
         #newwwww
         self.player = Chariot(*self.start_pos, chariot_type=selected_chariot)
 
+    
         #self.player = Chariot(*self.start_pos)
         self.ai_opponents = [AIOpponent(self.start_pos[0] - (i * 40), self.start_pos[1], self.ai_path, i) for i in range(3)]
         #self.ai_opponents = [AIOpponent(self.start_pos[0] + (i * 50), self.start_pos[1]) for i in range(4)]
@@ -93,7 +92,7 @@ class RaceScreen:
         self.exit_button = pygame.Rect(20, 720, 150, 50)
         self.font = pygame.font.Font(None, 36)
 
-        
+      
         if self.game_mode == "survival":
             self.obstacles = [
                 pygame.Rect(random.randint(300,  800), random.randint(50, 1050), 40, 40)
@@ -105,6 +104,7 @@ class RaceScreen:
         if random.random() < 0.02:  # 2% chance per frame
             x = random.randint(50, 1000)
             self.falling_objects.append(pygame.Rect(x, 0, 30, 30))
+        
 
     def move_falling_objects(self):
         """Move and detect collisions."""
@@ -257,7 +257,7 @@ class RaceScreen:
             for ai in self.ai_opponents:
                 ai.move(self.track_bounds, self.finish_zone)
             
-            
+        
             # Power-ups handles collide, apply, and remove
             for powerup in self.powerups[:]:
                 if self.player.rect.colliderect(powerup):
