@@ -15,6 +15,10 @@ DUST_IMAGE = pygame.transform.scale(DUST_IMAGE, (30, 30))
 
 CRASH_IMAGE = pygame.image.load("assets/crash.png")
 CRASH_IMAGE = pygame.transform.scale(CRASH_IMAGE, (60, 60))
+
+ARROW_IMAGE = pygame.image.load("assets/arrow.png")
+ARROW_IMAGE = pygame.transform.scale(ARROW_IMAGE, (50, 50))
+
 '''
 # Load AI chariot images
 AI_CHARIOT_IMAGES = [
@@ -234,6 +238,8 @@ class AIOpponent(Chariot):
         #self.x, self.y = pygame.math.Vector2(x, y)
         #self.velocity = pygame.math.Vector2(0, 0)
         self.dust_particles = []
+        #self.friction = 0.03
+        #self.max_speed = 6.5 + random.uniform(-0.3, 0.3)
 
         
 
@@ -252,6 +258,18 @@ class AIOpponent(Chariot):
 
         # AI speed is slightly less than player
         self.velocity = direction * self.max_speed * 0.6 
+        # Simulate acceleration new
+        '''
+        desired_velocity = direction * self.max_speed * .9
+        steering = desired_velocity - self.velocity
+        max_steering = 0.15
+        if steering.length() > max_steering:
+            steering.scale_to_length(max_steering)
+
+        self.velocity += steering
+        self.velocity *= (1 - self.friction)  # Apply friction
+        '''
+        #end
         self.pos += self.velocity 
 
         # Update angle (face movement direction)
@@ -270,7 +288,7 @@ class AIOpponent(Chariot):
             self.dust_particles.append(DustParticle(self.pos.x, self.pos.y))
 
 
-
+        
         # Collision handling
         if self.check_collision(track_bounds):
             # Revert to last position (optional)
@@ -322,6 +340,19 @@ class CrashParticle:
     def draw(self, screen):
         screen.blit(self.image, self.pos)
    
+
+class Arrow(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.angle = 0
+        self.image = ARROW_IMAGE.copy()
+        self.image = pygame.transform.rotate(self.image, self.angle + 90)
+        self.rect = self.image.get_rect(center=(x, y))
+
+    def update(self):
+        self.rect.y += 5
+        if self.rect.top > 850:
+            self.kill()
 
 
 

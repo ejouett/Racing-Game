@@ -1,7 +1,7 @@
 import pygame
 import random
 #from utils import Chariot, ShieldPowerUp
-from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle, CrashParticle
+from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle, CrashParticle, Arrow
 #from track_data import TRACK_DETAILS
 
 WHITE, RED, BLUE = (255, 255, 255), (255, 0, 0), (0, 0, 255)
@@ -24,11 +24,11 @@ TRACK_DETAILS = {
         "ai_path": [(500, 680), (670, 620), (700, 550), (710, 500), (720, 400), (690, 220), (590, 180), (510, 155), (370, 200), (320, 300), (310, 500), (350, 590), (400, 640)]
     },
      "assets/modern_track.png": {
-        "start": (460, 630),
+        "start": (490, 630),
         "finish": pygame.Rect(450, 550, 85, 20),
         #right, top, left, bottom, bottom right, inside top rec, middle inside rec, middle left inside, bottom inside horizontal rec, very bottom inside, rightside indent outside, leftside indent outside
         "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160), pygame.Rect(350, 555, 80, 300), pygame.Rect(480, 140, 350, 100), pygame.Rect(615, 250, 210, 180), pygame.Rect(480, 400, 180, 70), pygame.Rect(560, 480, 70, 230), pygame.Rect(630, 710, 200, 8), pygame.Rect(770, 520, 200, 120), pygame.Rect(340, 320, 160, 7)],
-        "ai_path": [(460, 630), (480, 740), (810, 745), (885, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
+        "ai_path": [(490, 630), (480, 740), (810, 745), (885, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
     },
     "assets/ancient_greece.png": {
         "start": (800, 300),
@@ -50,7 +50,8 @@ class RaceScreen:
 
         self.game_mode = game_mode  # Store the mode
 
-        self.falling_objects = []  # Objects in survival mode
+        #self.falling_objects = []  # Objects in survival mode
+        self.falling_objects = pygame.sprite.Group()
 
         """
         # Apply chariot abilities
@@ -92,22 +93,25 @@ class RaceScreen:
         self.exit_button = pygame.Rect(20, 720, 150, 50)
         self.font = pygame.font.Font(None, 36)
 
-      
+        '''      
         if self.game_mode == "survival":
             self.obstacles = [
                 pygame.Rect(random.randint(300,  800), random.randint(50, 1050), 40, 40)
                 for _ in range(50)
             ]
-        
+        '''
     def spawn_falling_objects(self):
         """Spawn objects in survival mode."""
         if random.random() < 0.02:  # 2% chance per frame
             x = random.randint(50, 1000)
-            self.falling_objects.append(pygame.Rect(x, 0, 30, 30))
+            #self.falling_objects.append(pygame.Rect(x, 0, 30, 30))
+            arrow = Arrow(x, 0)
+            self.falling_objects.add(arrow)
         
 
     def move_falling_objects(self):
         """Move and detect collisions."""
+        '''
         for obj in self.falling_objects[:]:
             obj.y += 5
             pygame.draw.rect(self.screen, RED, obj)
@@ -117,6 +121,18 @@ class RaceScreen:
                 if not self.player.shield_active:
                     self.player.health -= 10
                 self.falling_objects.remove(obj)
+            '''
+        #self.falling_objects.update()
+        #self.falling_objects.draw(self.screen)
+
+        for arrow in self.falling_objects:
+            self.falling_objects.update()
+            self.falling_objects.draw(self.screen)
+
+            if self.player.rect.colliderect(arrow.rect):
+                if not self.player.shield_active:
+                    self.player.health -= 10
+                arrow.kill()
 
 
     def draw_exit_button(self):
