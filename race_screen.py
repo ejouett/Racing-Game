@@ -24,18 +24,18 @@ TRACK_DETAILS = {
         "ai_path": [(500, 680), (670, 620), (700, 550), (710, 500), (720, 400), (690, 220), (590, 180), (510, 155), (370, 200), (320, 300), (310, 500), (350, 590), (400, 640)]
     },
      "assets/modern_track.png": {
-        "start": (490, 630),
+        "start": (510, 630),
         "finish": pygame.Rect(450, 550, 85, 20),
         #right, top, left, bottom, bottom right, inside top rec, middle inside rec, middle left inside, bottom inside horizontal rec, very bottom inside, rightside indent outside, leftside indent outside
-        "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160), pygame.Rect(350, 555, 80, 300), pygame.Rect(480, 140, 350, 100), pygame.Rect(615, 250, 210, 180), pygame.Rect(480, 400, 180, 70), pygame.Rect(560, 480, 70, 230), pygame.Rect(630, 710, 200, 8), pygame.Rect(770, 520, 200, 120), pygame.Rect(340, 320, 160, 7)],
-        "ai_path": [(490, 630), (480, 740), (810, 745), (885, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 80), (400, 80), (400, 250), (450, 270), (500, 300), (450, 330), (400, 350), (400, 450), (450, 500)]
+        "bounds": [pygame.Rect(960, 0, 300, 800), pygame.Rect(0, 0, 1250, 50), pygame.Rect(0, 0, 350, 1250), pygame.Rect(0, 790, 980, 160), pygame.Rect(350, 555, 80, 300), pygame.Rect(480, 140, 350, 100), pygame.Rect(615, 250, 210, 180), pygame.Rect(480, 400, 180, 70), pygame.Rect(560, 480, 70, 230), pygame.Rect(630, 710, 200, 8), pygame.Rect(770, 520, 200, 110), pygame.Rect(340, 320, 160, 5)],
+        "ai_path": [(510, 630), (480, 730), (810, 745), (885, 705), (820, 650), (690, 650), (690, 450), (880, 450), (880, 90), (400, 80), (400, 250), (450, 260), (550, 300), (450, 340), (400, 350), (400, 450), (450, 480)]
     },
     "assets/ancient_greece.png": {
         "start": (800, 300),
-        "finish": pygame.Rect(540, 320, 50, 20),
+        "finish": pygame.Rect(535, 470, 60, 20),
         #right, top, left, bottom, bottom right corner, top right corner, top left corner, bottom left corner
         "bounds": [pygame.Rect(980, 150, 700, 500), pygame.Rect(0, 0, 980, 160), pygame.Rect(0, 0, 100, 800), pygame.Rect(0, 770, 980, 160), pygame.Rect(970, 650, 980, 160), pygame.Rect(950, 670, 980, 160), pygame.Rect(950, 710, 980, 160), pygame.Rect(900, 700, 980, 160), pygame.Rect(880, 250, 400, 55), pygame.Rect(810, 150, 400, 50), pygame.Rect(200, 160, 60, 50), pygame.Rect(100, 210, 60, 70), pygame.Rect(100, 280, 40, 40), pygame.Rect(100, 600, 30, 200), pygame.Rect(100, 680, 50, 200), pygame.Rect(100, 740, 140, 50), pygame.Rect(780, 740, 400, 50), pygame.Rect(785, 420, 80, 150), pygame.Rect(240, 450, 80, 160), pygame.Rect(260, 350, 75, 100), pygame.Rect(330, 260, 45, 100), pygame.Rect(350, 240, 380, 1), pygame.Rect(680, 260, 40, 60), pygame.Rect(490, 530, 120, 60), pygame.Rect(350, 675, 400, 1), pygame.Rect(680, 350, 13, 170)],    #, pygame.Rect(960, 660, 980, 160)
-        "ai_path": [(800, 300), (750, 220), (730, 190), (700, 180), (550, 180), (350, 180), (280, 220), (220, 300), (150, 400), (130, 500), (180, 600), (330, 695), (700, 695), (850, 630), (890, 590), (900, 380), (800, 350), (720, 395), (700, 580), (620, 620), (450, 630), (340, 580), (340, 480), (430, 250), (500, 235), (620, 280), (510, 480)]
+        "ai_path": [(800, 300), (750, 230), (730, 190), (700, 180), (550, 180), (350, 180), (280, 220), (220, 300), (150, 400), (130, 500), (180, 600), (330, 695), (700, 695), (850, 630), (890, 590), (900, 380), (800, 350), (720, 395), (700, 580), (620, 620), (450, 630), (340, 580), (340, 480), (430, 250), (505, 240), (620, 280), (510, 480)]
     }
     
 }

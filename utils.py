@@ -11,7 +11,7 @@ SPEED_BOOST_IMAGE = pygame.image.load("assets/Speedboost v3 transparent.png")
 SPEED_BOOST_IMAGE = pygame.transform.scale(SPEED_BOOST_IMAGE, (40, 40))
 
 DUST_IMAGE = pygame.image.load("assets/dusty.png")
-DUST_IMAGE = pygame.transform.scale(DUST_IMAGE, (30, 30))
+DUST_IMAGE = pygame.transform.scale(DUST_IMAGE, (50, 50))
 
 CRASH_IMAGE = pygame.image.load("assets/crash.png")
 CRASH_IMAGE = pygame.transform.scale(CRASH_IMAGE, (60, 60))
@@ -53,10 +53,10 @@ class Chariot:
         self.pos = pygame.math.Vector2(self.x, self.y)
         self.velocity = pygame.math.Vector2(0, 0)
         self.angle = 0
-        self.speed = 4
+        self.speed = 3
        # self.image = image
         self.acceleration = 0.2
-        self.max_speed = 6
+        self.max_speed = 4
         self.friction = 0.05
         self.drift_factor = 0.85  # adjust for
         self.drift_mode = False
@@ -221,14 +221,14 @@ class AIOpponent(Chariot):
     def __init__(self, x, y, ai_path, ai_index):
         super().__init__(x, y)
         self.image = AI_CHARIOT_IMAGES[ai_index]  # Assign AI-specific image
-        self.speed = 9 + random.uniform(-0.5, 0.5) # AI speed
+        #self.speed = 9 + random.uniform(-0.5, 0.5) # AI speed
         #self.angle = 0
         #self.pos = pygame.math.Vector2(x, y)
         self.x = x
         self.y = y
         self.pos = pygame.math.Vector2(self.x, self.y)
         self.angle = 0
-        #self.speed = 4  # AI speed of 4
+        self.speed = 4 + random.uniform(-0.5, 0.5) # AI speed of 4
         #self.rect = pygame.Rect(self.x, self.y, 50, 50)
         self.track_path = ai_path  # List of waypoints
         self.target_index = 0  # Start at first waypoint
@@ -238,8 +238,8 @@ class AIOpponent(Chariot):
         #self.x, self.y = pygame.math.Vector2(x, y)
         #self.velocity = pygame.math.Vector2(0, 0)
         self.dust_particles = []
-        #self.friction = 0.03
-        #self.max_speed = 6.5 + random.uniform(-0.3, 0.3)
+        self.friction = 0.05 + random.uniform(-0.005, 0.005) # to randomize speed when turning so any AI can win
+        self.max_speed = 6 + random.uniform(-0.5, 0.5)
 
         
 
@@ -257,9 +257,9 @@ class AIOpponent(Chariot):
             direction = direction.normalize()
 
         # AI speed is slightly less than player
-        self.velocity = direction * self.max_speed * 0.6 
+        #self.velocity = direction * self.max_speed * 0.6 
         # Simulate acceleration new
-        '''
+        
         desired_velocity = direction * self.max_speed * .9
         steering = desired_velocity - self.velocity
         max_steering = 0.15
@@ -268,23 +268,28 @@ class AIOpponent(Chariot):
 
         self.velocity += steering
         self.velocity *= (1 - self.friction)  # Apply friction
-        '''
+        
         #end
         self.pos += self.velocity 
-
+        self.rect.topleft = (int(self.pos.x), int(self.pos.y))
         # Update angle (face movement direction)
         if self.velocity.length() > 0:
             self.angle = -math.degrees(math.atan2(self.velocity.y, self.velocity.x))
             
 
-        self.rect.topleft = (int(self.pos.x), int(self.pos.y))
+        # Drift effect
+        drift_intensity = min(1.0, abs(steering.angle_to(self.velocity)) / 45)
+        drift_vector = pygame.math.Vector2(-self.velocity.y, self.velocity.x)  # Perpendicular vector
+        self.pos += drift_vector * 0.3 * drift_intensity  # Adjust the multiplier for more/less drift
+            
+        #self.rect.topleft = (int(self.pos.x), int(self.pos.y))
 
         # Check for reaching waypoint
         if self.pos.distance_to(target) < 20:
             self.target_index = (self.target_index + 1) % len(self.track_path)
 
-
-        if self.velocity.length() > 0.5:
+        if self.velocity.length() > 2 and drift_intensity > 0.4:
+        #if self.velocity.length() > 0.5:
             self.dust_particles.append(DustParticle(self.pos.x, self.pos.y))
 
 
