@@ -28,6 +28,7 @@ AI_CHARIOT_IMAGES = [
     pygame.transform.scale(pygame.image.load("assets/Hades Chariot Pixelated Transparent.png"), (40, 30))
 ]
 '''
+'''
 # Load AI chariot images (flip horizontally so horses are in front)
 AI_CHARIOT_IMAGES = [
     #pygame.transform.flip(pygame.transform.scale(pygame.image.load("assets/chariot pixel art.png"), (40, 30)), True, False),
@@ -35,6 +36,26 @@ AI_CHARIOT_IMAGES = [
     pygame.transform.flip(pygame.transform.scale(pygame.image.load("assets/Zeus Chariot Pixelated Transparent.png"), (40, 30)), True, False),
     pygame.transform.flip(pygame.transform.scale(pygame.image.load("assets/Hades Chariot Pixelated Transparent.png"), (40, 30)), True, False)
 ]
+'''
+
+AI_CHARIOT_DATA = [
+    {
+        "name": "Poseidon",
+        "image": pygame.transform.flip(pygame.transform.scale(
+            pygame.image.load("assets/Poseidon Chariot Pixelated Transparent.png"), (40, 30)), True, False)
+    },
+    {
+        "name": "Zeus",
+        "image": pygame.transform.flip(pygame.transform.scale(
+            pygame.image.load("assets/Zeus Chariot Pixelated Transparent.png"), (40, 30)), True, False)
+    },
+    {
+        "name": "Hades",
+        "image": pygame.transform.flip(pygame.transform.scale(
+            pygame.image.load("assets/Hades Chariot Pixelated Transparent.png"), (40, 30)), True, False)
+    }
+]
+
 
 class Chariot:
     def __init__(self, x, y, chariot_type=0):
@@ -219,8 +240,8 @@ class Chariot:
 
 class AIOpponent(Chariot):
     def __init__(self, x, y, ai_path, ai_index):
-        super().__init__(x, y)
-        self.image = AI_CHARIOT_IMAGES[ai_index]  # Assign AI-specific image
+        super().__init__(x, y)  #NEW
+        #self.image = AI_CHARIOT_IMAGES[ai_index]  # Assign AI-specific image
         #self.speed = 9 + random.uniform(-0.5, 0.5) # AI speed
         #self.angle = 0
         #self.pos = pygame.math.Vector2(x, y)
@@ -241,12 +262,20 @@ class AIOpponent(Chariot):
         self.friction = 0.05 + random.uniform(-0.005, 0.005) # to randomize speed when turning so any AI can win
         self.max_speed = 6 + random.uniform(-0.5, 0.5)
 
-        
+        chariot_data = AI_CHARIOT_DATA[ai_index % len(AI_CHARIOT_DATA)]
+        self.image = chariot_data["image"]
+        self.name = chariot_data["name"]
+        self.font = pygame.font.Font(None, 24)
+
 
 
         #self.rect = self.image.get_rect(center=(self.x, self.y))
         self.rect = self.image.get_rect(topleft=(x, y))
         #self.rect.topleft = (self.x, self.y)
+    def draw_name(self, screen):
+        name_surf = self.font.render(self.name, True, (255, 255, 255))
+        screen.blit(name_surf, (self.rect.x, self.rect.y - 20))
+
 
     
     def move(self, track_bounds, finish_zone):

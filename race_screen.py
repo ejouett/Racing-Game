@@ -198,7 +198,7 @@ class RaceScreen:
                 grade = "D"
             else:
                 grade = "F"
-        else:
+        else: 
             grade = "F"
 
         grade_font = pygame.font.SysFont(None, 50)
@@ -221,7 +221,7 @@ class RaceScreen:
             lap_text = font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
             self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
 
-
+          
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -305,6 +305,8 @@ class RaceScreen:
             self.player.draw(self.screen)
             for ai in self.ai_opponents:
                 ai.draw(self.screen)
+                ai.draw_name(self.screen) #new
+            
 
             #draw powerups
             for powerup in self.powerups: #new
