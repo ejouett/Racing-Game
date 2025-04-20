@@ -4,6 +4,7 @@ import random
 from utils import Chariot, AIOpponent, ShieldPowerUp, SpeedBoost, PowerUp, DustParticle, CrashParticle, Arrow
 #from track_data import TRACK_DETAILS
 
+
 WHITE, RED, BLUE = (255, 255, 255), (255, 0, 0), (0, 0, 255)
 
 #new
@@ -42,7 +43,7 @@ TRACK_DETAILS = {
 
 
 class RaceScreen:
-    def __init__(self, screen, track_image_path, selected_chariot, game_mode):
+    def __init__(self, screen, track_image_path, selected_chariot, game_mode, player_name=""):
         self.screen = screen
         self.track_img = pygame.image.load(track_image_path)
         self.track_img = pygame.transform.scale(self.track_img, (1100, 850))
@@ -52,6 +53,8 @@ class RaceScreen:
 
         #self.falling_objects = []  # Objects in survival mode
         self.falling_objects = pygame.sprite.Group()
+
+        self.player_name = player_name
 
         """
         # Apply chariot abilities
@@ -80,7 +83,7 @@ class RaceScreen:
        # self.player.laps = 0
         # Exit Button
         #newwwww
-        self.player = Chariot(*self.start_pos, chariot_type=selected_chariot)
+        self.player = Chariot(*self.start_pos, chariot_type=selected_chariot, name=self.player_name)
 
     
         #self.player = Chariot(*self.start_pos)
@@ -303,6 +306,7 @@ class RaceScreen:
                 
             # Draw all elements / new
             self.player.draw(self.screen)
+            self.player.draw_names(self.screen) #new
             for ai in self.ai_opponents:
                 ai.draw(self.screen)
                 ai.draw_name(self.screen) #new

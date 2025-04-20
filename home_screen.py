@@ -7,9 +7,15 @@ BUTTON_RADIUS = 15  # Size of chariot selection buttons
 
 
 class HomeScreen:
-    def __init__(self, screen):
+    def __init__(self, screen, player_name="", wins=0, losses=0):
+
+        self.player_name = player_name
+        #other code
+        self.wins = wins
+        self.losses = losses
+
         self.screen = screen
-        self.font = pygame.font.Font(None, 50)
+        self.font = pygame.font.Font(None, 38)
         
         # Load background image
         self.background = pygame.image.load("assets/homescreen_Backround.png")
@@ -34,10 +40,10 @@ class HomeScreen:
 
         # Buttons for track selection
         self.buttons = {
-            "Colosseum Map 1": pygame.Rect(350, 250, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "Colosseum Map 2": pygame.Rect(350, 400, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "Greek Track": pygame.Rect(350, 550, BUTTON_WIDTH, BUTTON_HEIGHT),
-            "Modern track": pygame.Rect(350, 690, BUTTON_WIDTH, BUTTON_HEIGHT)
+            "Colosseum Map 1": pygame.Rect(300, 250, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Colosseum Map 2": pygame.Rect(300, 400, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Greek Track": pygame.Rect(300, 550, BUTTON_WIDTH, BUTTON_HEIGHT),
+            "Modern track": pygame.Rect(300, 690, BUTTON_WIDTH, BUTTON_HEIGHT)
         }
         self.track_paths = {
             "Colosseum Map 1": "assets/colosseum_track.png",
@@ -93,7 +99,7 @@ class HomeScreen:
             # Draw track selection buttons
             for name, button in self.buttons.items():
                 #pygame.draw.rect(self.screen, BLUE, button)
-                self.draw_text(name, (button.x - 300, button.y + 30))
+                self.draw_text(name, (button.x - 270, button.y + 30))
                 self.screen.blit(self.track_images[name], (button.x, button.y))  # Draw track image
                 pygame.draw.rect(self.screen, BLACK, button, 3)  # Optional: Outline for visibility
 
@@ -138,6 +144,7 @@ class HomeScreen:
 
                     # NEWWWW select track
                     #if self.selected_chariot in [0, 1, 2]:
+                    
                     if self.selected_chariot is not None:
                         print(f"Chariot selected: {self.selected_chariot}")
                         for name, button in self.buttons.items():
@@ -145,9 +152,22 @@ class HomeScreen:
                                 game_mode = self.selected_modes[name] #NEWWWWW
                                 print(f"Track selected: {name}")
                                 return (self.track_paths[name], self.selected_chariot, game_mode)  # Always return tuple
-
                     
-                      
+
+                  
+
+            #drawing player stats on home screen
+            self.draw_text(f"Player: {self.player_name}", (690, 240))
+            self.draw_text("Career Progress:", (690, 280))
+            self.draw_text("Grade: Beginner", (690, 440)) 
+            self.draw_text(f"Wins: {self.wins}", (690, 320))
+            self.draw_text(f"Losses: {self.losses}", (690, 360))
+
+            # Prevent divide-by-zero
+            ratio = self.wins / self.losses if self.losses else self.wins
+            self.draw_text(f"Win/Loss Ratio: {ratio:.2f}", (690, 400))
+
+ 
                     #for name, button in self.buttons.items():
                     #    if button.collidepoint(event.pos):
                     #        return self.track_paths[name]

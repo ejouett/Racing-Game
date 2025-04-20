@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from utils_names import load_player_data
 
 WIDTH, HEIGHT = 1000, 800
 
@@ -38,6 +39,7 @@ AI_CHARIOT_IMAGES = [
 ]
 '''
 
+# Load AI chariot data name and image (flip horizontally so horses are in the correct direction when starting) give them their names the 3 big gods
 AI_CHARIOT_DATA = [
     {
         "name": "Poseidon",
@@ -58,7 +60,7 @@ AI_CHARIOT_DATA = [
 
 
 class Chariot:
-    def __init__(self, x, y, chariot_type=0):
+    def __init__(self, x, y, chariot_type=0, name="Player"):
         #self.x, self.y = x, y
         self.speed = 4
         #self.image = pygame.image.load("assets/chariot pixel art.png")
@@ -88,6 +90,9 @@ class Chariot:
         self.drift_speed_multiplier = 0.85
         self.dust_particles = []  #dust list for visual effect when turning
         self.crash_particles = []
+        #self.player_name = player_name
+        self.name = name
+        #self.player_name = load_player_data()
 
 
 
@@ -236,6 +241,15 @@ class Chariot:
         screen.blit(rotated_image, rect)
         #screen.blit(self.image, (self.x, self.y))
         #pygame.draw.rect(screen, (255, 0, 0), (10, 10, self.health * 2, 20))
+        # Draw player name
+       
+
+    def draw_names(self, screen):
+        #player_name, wins, losses = load_player_data()
+        self.font = pygame.font.Font(None, 24)
+        name_surf = self.font.render(self.name, True, (255, 255, 255))
+        screen.blit(name_surf, (self.rect.x, self.rect.y - 20))
+
 
 
 class AIOpponent(Chariot):
