@@ -14,8 +14,8 @@ class IntroScreen:
 
 
          # Load background image
-        self.background = pygame.image.load("assets/ancient greece background 2 pixelated.png")
-        self.background = pygame.transform.scale(self.background, (1500, 1000))
+        self.background = pygame.image.load("assets/standingperson.png")
+        self.background = pygame.transform.scale(self.background, (1000, 800))
 
     def draw_text(self, text, pos, size=50):
         font = pygame.font.Font(None, size)
