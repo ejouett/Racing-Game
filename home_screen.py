@@ -18,9 +18,12 @@ class HomeScreen:
         self.font = pygame.font.Font(None, 38)
         
         # Load background image
-        self.background = pygame.image.load("assets/homescreen_Backround.png")
+        self.background = pygame.image.load("assets/homescreen_backround.png")
         self.background = pygame.transform.scale(self.background, (1000, 800))
 
+        # Load background image for how to play screen
+        self.background_instructions = pygame.image.load("assets/greektheme.png")
+        self.background_instructions = pygame.transform.scale(self.background_instructions, (1000, 800))
 
         #NEWWWWW
         # Load chariot images
@@ -162,7 +165,6 @@ class HomeScreen:
             self.draw_text("Grade: Beginner", (690, 440)) 
             self.draw_text(f"Wins: {self.wins}", (690, 320))
             self.draw_text(f"Losses: {self.losses}", (690, 360))
-
             # Prevent divide-by-zero
             ratio = self.wins / self.losses if self.losses else self.wins
             self.draw_text(f"Win/Loss Ratio: {ratio:.2f}", (690, 400))
@@ -179,6 +181,7 @@ class HomeScreen:
         help_running = True
         while help_running:
             self.screen.fill(WHITE)
+            self.screen.blit(self.background_instructions, (0, 0))  # Draw background
             self.draw_text("How to Play:", (350, 100))
 
             instructions = [
@@ -195,7 +198,7 @@ class HomeScreen:
 
             y_position = 200
             for instruction in instructions:
-                self.draw_text(instruction, (50, y_position))
+                self.draw_text(instruction, (70, y_position))
                 y_position += 50
 
             # Back button

@@ -56,6 +56,10 @@ class RaceScreen:
 
         self.player_name = player_name
 
+         # Load background image for how to play screen
+        self.background_race_result = pygame.image.load("assets/greektheme.png")
+        self.background_race_result = pygame.transform.scale(self.background_race_result, (1000, 800))
+
         """
         # Apply chariot abilities
         if self.selected_chariot == "health":
@@ -215,6 +219,7 @@ class RaceScreen:
 
         while running:
             self.screen.fill((255, 255, 255))
+            self.screen.blit(self.background_race_result, (0, 0))
             title = font.render(result_text, True, result_color)
             self.screen.blit(title, (400, 200))
             pygame.draw.rect(self.screen, (0, 0, 200), home_button)
@@ -222,7 +227,7 @@ class RaceScreen:
             #self.screen.blit(replay_text, (380, 300))
             self.screen.blit(grade_text, grade_rect)
             lap_text = font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
-            self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
+            self.screen.blit(lap_text, (750, 70))  # Adjust based on your resolution
 
           
             for event in pygame.event.get():
