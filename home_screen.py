@@ -8,11 +8,14 @@ BUTTON_RADIUS = 15  # Size of chariot selection buttons
 
 class HomeScreen:
     def __init__(self, screen, player_name="", wins=0, losses=0):
+        self.profile_button = pygame.Rect(690, 190, 200, 40) #new button for player profile
+
 
         self.player_name = player_name
         #other code
         self.wins = wins
         self.losses = losses
+        #points = points
 
         self.screen = screen
         self.font = pygame.font.Font(None, 38)
@@ -126,6 +129,10 @@ class HomeScreen:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
 
+                    if self.profile_button.collidepoint(event.pos):
+                        from player_profile_screen import PlayerProfileScreen
+                        profile_screen = PlayerProfileScreen(self.screen, self.player_name, self.wins, self.losses)
+                        profile_screen.run()
                     # Check chariot selection
                     for i, (bx, by) in enumerate(self.button_positions):
                         if (x - bx) ** 2 + (y - by) ** 2 <= BUTTON_RADIUS ** 2:
@@ -158,7 +165,8 @@ class HomeScreen:
                     
 
                   
-
+            pygame.draw.rect(self.screen, BLUE, self.profile_button)
+            self.draw_text("Player Profile", (700, 200))
             #drawing player stats on home screen
             self.draw_text(f"Player: {self.player_name}", (690, 240))
             self.draw_text("Career Progress:", (690, 280))
@@ -168,6 +176,7 @@ class HomeScreen:
             # Prevent divide-by-zero
             ratio = self.wins / self.losses if self.losses else self.wins
             self.draw_text(f"Win/Loss Ratio: {ratio:.2f}", (690, 400))
+            #self.draw_text(f"Losses: {self.points}", (690, 360))
 
  
                     #for name, button in self.buttons.items():
@@ -212,5 +221,6 @@ class HomeScreen:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if back_button.collidepoint(event.pos):
                         help_running = False  # Return to the home screen
+
 
             pygame.display.update()
