@@ -295,6 +295,7 @@ class RaceScreen:
             lap_text = self.font.render(f"Lap: {self.player.laps}/5", True, (0, 0, 0))
             self.screen.blit(lap_text, (800, 20))  # Adjust based on your resolution
 
+            
                 # Draw Exit Button
             self.draw_exit_button()
 

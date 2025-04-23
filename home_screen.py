@@ -28,7 +28,7 @@ class HomeScreen:
         #NEWWWWW
         # Load chariot images
         self.chariot_images = [
-            pygame.image.load("assets/chariot pixel art.png"),
+            pygame.transform.flip(pygame.image.load("assets/chariot pixel art.png"), True, False),
             pygame.image.load("assets/chariot 2 pixel art.png"),
             pygame.image.load("assets/chariot 3 pixel art.png")
         ]
