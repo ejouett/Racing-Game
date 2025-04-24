@@ -8,7 +8,7 @@ BUTTON_RADIUS = 15  # Size of chariot selection buttons
 
 class HomeScreen:
     def __init__(self, screen, player_name="", wins=0, losses=0):
-        self.profile_button = pygame.Rect(690, 190, 200, 40) #new button for player profile
+        self.profile_button = pygame.Rect(690, 230, 200, 40) #new button for player profile
 
 
         self.player_name = player_name
@@ -67,8 +67,8 @@ class HomeScreen:
         #self.help_button = pygame.Rect(850, 30, 120, 50)
         # Load help button image newwww
         self.help_button_img = pygame.image.load("assets/pixaated tutorial button transparent.png")
-        self.help_button_img = pygame.transform.scale(self.help_button_img, (100, 50))
-        self.help_button_rect = self.help_button_img.get_rect(topleft=(850, 30))
+        self.help_button_img = pygame.transform.scale(self.help_button_img, (80, 80))
+        self.help_button_rect = self.help_button_img.get_rect(topleft=(830, 10))
 
 
         # Survival Mode buttons NEW
@@ -131,7 +131,7 @@ class HomeScreen:
 
                     if self.profile_button.collidepoint(event.pos):
                         from player_profile_screen import PlayerProfileScreen
-                        profile_screen = PlayerProfileScreen(self.screen, self.player_name, self.wins, self.losses)
+                        profile_screen = PlayerProfileScreen(self.screen, self.player_name, self.wins, self.losses) #new
                         profile_screen.run()
                     # Check chariot selection
                     for i, (bx, by) in enumerate(self.button_positions):
@@ -166,17 +166,20 @@ class HomeScreen:
 
                   
             pygame.draw.rect(self.screen, BLUE, self.profile_button)
-            self.draw_text("Player Profile", (700, 200))
+            self.draw_text("Player Profile", (700, 240))
             #drawing player stats on home screen
-            self.draw_text(f"Player: {self.player_name}", (690, 240))
-            self.draw_text("Career Progress:", (690, 280))
-            self.draw_text("Grade: Beginner", (690, 440)) 
-            self.draw_text(f"Wins: {self.wins}", (690, 320))
-            self.draw_text(f"Losses: {self.losses}", (690, 360))
+            self.draw_text(f"Player: {self.player_name}", (690, 280))
+            self.draw_text("Career Progress:", (690, 320))
+            #self.draw_text("Grade: Beginner", (690, 440)) 
+            self.draw_text(f"Wins: {self.wins}", (690, 360))
+            self.draw_text(f"Losses: {self.losses}", (690, 400))
             # Prevent divide-by-zero
             ratio = self.wins / self.losses if self.losses else self.wins
-            self.draw_text(f"Win/Loss Ratio: {ratio:.2f}", (690, 400))
-            #self.draw_text(f"Losses: {self.points}", (690, 360))
+            self.draw_text(f"Win/Loss Ratio: {ratio:.2f}", (690, 440))
+           #self.draw_text(f"points: {self.points}", (690, 480))
+            #self.draw_text(f"Points: {self.points}", (690, 480))
+            level = self.wins 
+            self.draw_text(f"Level: {level}", (690, 480))
 
  
                     #for name, button in self.buttons.items():

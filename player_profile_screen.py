@@ -15,7 +15,9 @@ class PlayerProfileScreen:
         # Load chariot images and info
         self.chariot_info = [
             {
-                "image": pygame.transform.scale(pygame.image.load("assets/chariot pixel art.png"), (100, 100)),
+                "image": pygame.transform.flip(pygame.transform.scale(
+                    pygame.image.load("assets/chariot pixel art.png"), (100, 100)), True, False),
+                #"image": pygame.transform.scale(pygame.image.load("assets/chariot pixel art.png"), (100, 100)),
                 "name": "Chariot of Hermes",
                 "ability": "Speed Boost on straights"
             },
@@ -47,9 +49,10 @@ class PlayerProfileScreen:
             self.draw_text(f"Wins: {self.wins}", (100, 140))
             self.draw_text(f"Losses: {self.losses}", (100, 180))
             #self.draw_text(f"Points: {self.points}", (100, 220))
+            #level = self.points // 50
             level = self.wins // 50
-            self.draw_text(f"Level: {level}", (100, 260))
-            self.draw_text("Leveling Up: Gain 50 points per win to level up!", (100, 300))
+            self.draw_text(f"Level: {level}", (100, 220))
+            self.draw_text("Leveling Up: win 5 matched to level up!", (100, 300))
 
             # Chariots
             self.draw_text("Chariots & Abilities:", (100, 360), self.big_font)
@@ -60,9 +63,9 @@ class PlayerProfileScreen:
                 self.draw_text(f"Ability: {info['ability']}", (220, y_offset + 40))
 
             # Back button
-            back_button = pygame.Rect(400, 700, 200, 50)
+            back_button = pygame.Rect(400, 720, 200, 50)
             pygame.draw.rect(self.screen, BLUE, back_button)
-            self.draw_text("Back", (470, 710))
+            self.draw_text("Back", (470, 730))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
